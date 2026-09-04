@@ -50,6 +50,7 @@ h2 {
     border: 5px outset black;
     min-width: 60%;
     min-height: 200px;
+    max-width: 95%;
     height: auto;
     padding: 0 auto;
     margin: 0 auto;
@@ -57,7 +58,7 @@ h2 {
     background-color: gainsboro;
     box-shadow: 4px 4px 5px dimgray;
     border-radius: 20%;
-    font-size: 80px;
+    font-size: 60px;
 }
 @media (hover: hover) {
     #slowko:hover {
