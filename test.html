@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Podaj tłumaczenie słowa</h1>
+    <section>
+        <p id="slowo"></p>
+        <form id="formularz">
+            <input name="slowo" type="text" id="text" required>
+            <input type="submit" value="Zatwierdź" id="submit"> <br><br>
+        </form>
+        <button onclick="umlaut('ä')">ä</button>
+        <button onclick="umlaut('ö')">ö</button>
+        <button onclick="umlaut('ü')">ü</button>
+        <button onclick="umlaut('ß')">ß</button>
+        <button onclick="location.reload()">Zacznij od nowa</button>
+        <p id="wynik"></p>
+        <a href="index.html"><button>Zmień słownictwo</button></a>
+        <a href="fiszki.html"><button>Fiszki</button></a>
+    </section>
+    <section id="lista">
+    </section>
+    <footer>
+        Autor: Szymon Szyrwiński
+    </footer>
+
+<script src="test_script.js"></script>
+</body>
+</html>

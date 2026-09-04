@@ -1,0 +1,62 @@
+body {
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size: 30px;
+    background-color: rgba(70, 131, 180, 0.664);
+    text-align: center;
+}
+h1 {
+    background-color: steelblue;
+    padding: 5px;
+    box-shadow: 4px 4px 5px dimgray;
+}
+section {
+    background-color: steelblue;
+    padding: 10px;
+    box-shadow: 4px 4px 5px dimgray;
+    margin-bottom: 20px;
+}
+footer {
+    background-color: steelblue;
+    position: fixed;
+    padding: 5px;
+    bottom: 0;
+}
+#lista {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+#lista div {
+    margin: 6px;
+    border: 2px dashed black;
+}
+button, input {
+    font-size: 30px;
+}
+.dobrze {
+    color: green;
+}
+.zle {
+    color: red;
+}
+h2 {
+    width: 100%;
+}
+#slowko {
+    display: inline-block;
+    border: 5px outset black;
+    min-width: 50%;
+    width: auto;
+    height: 80px;
+    padding: 0 auto;
+    margin: 0 auto;
+    margin-bottom: 40px;
+    background-color: gainsboro;
+    box-shadow: 4px 4px 5px dimgray;
+    border-radius: 20%;
+    font-size: 50px;
+}
+#slowko:hover {
+    border-style: inset;
+    background-color: rgb(172, 166, 166);
+}
