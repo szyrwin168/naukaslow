@@ -21,6 +21,9 @@ footer {
     padding: 5px;
     bottom: 0;
 }
+label {
+    font-size: 40px;
+}
 #lista {
     display: flex;
     flex-wrap: wrap;
@@ -45,18 +48,23 @@ h2 {
 #slowko {
     display: inline-block;
     border: 5px outset black;
-    min-width: 50%;
-    width: auto;
-    height: 80px;
+    min-width: 60%;
+    min-height: 200px;
+    height: auto;
     padding: 0 auto;
     margin: 0 auto;
     margin-bottom: 40px;
     background-color: gainsboro;
     box-shadow: 4px 4px 5px dimgray;
     border-radius: 20%;
-    font-size: 50px;
+    font-size: 80px;
 }
-#slowko:hover {
-    border-style: inset;
-    background-color: rgb(172, 166, 166);
+@media (hover: hover) {
+    #slowko:hover {
+        border-style: inset;
+        background-color: rgb(172, 166, 166);
+    }
+}
+#slowko:active {
+    background-color: rgb(190, 185, 185);
 }
