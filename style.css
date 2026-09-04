@@ -1,8 +1,17 @@
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 body {
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     font-size: 30px;
     background-color: rgba(70, 131, 180, 0.664);
     text-align: center;
+    margin: 0;
+    padding-bottom: 3.8rem;
 }
 h1 {
     background-color: steelblue;
@@ -20,6 +29,10 @@ footer {
     position: fixed;
     padding: 5px;
     bottom: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+    z-index: 10;
 }
 label {
     font-size: 40px;
@@ -36,6 +49,8 @@ label {
 button, input {
     font-size: 30px;
 }
+
+/* statusy */
 .dobrze {
     color: green;
 }
@@ -45,6 +60,8 @@ button, input {
 h2 {
     width: 100%;
 }
+
+
 #slowko {
     display: inline-block;
     border: 5px outset black;
@@ -52,13 +69,20 @@ h2 {
     min-height: 200px;
     max-width: 95%;
     height: auto;
-    padding: 0 auto;
+    padding: 1rem;
     margin: 0 auto;
     margin-bottom: 40px;
     background-color: gainsboro;
     box-shadow: 4px 4px 5px dimgray;
     border-radius: 20%;
     font-size: 60px;
+    overflow-wrap: anywhere;
+    word-wrap: break-word;
+    word-break: break-word;
+    white-space: normal;
+    -webkit-hyphens: auto;
+    -ms-hyphens: auto;
+    hyphens: auto;
 }
 @media (hover: hover) {
     #slowko:hover {
@@ -68,4 +92,33 @@ h2 {
 }
 #slowko:active {
     background-color: rgb(190, 185, 185);
+}
+
+#slowko .longtext { word-break: break-all; }
+
+@media (max-width: 480px) {
+  body {
+    font-size: 18px;
+  }
+  label {
+    font-size: 20px;
+  }
+  button, input {
+    font-size: 18px;
+    padding: 0.3rem 0.5rem;
+  }
+  #slowko {
+    min-width: auto;
+    width: 90%;
+    font-size: 28px;
+    min-height: 120px;
+    border-radius: 16%;
+    padding: 0.8rem;
+  }
+  section {
+    padding: 8px;
+  }
+  footer {
+    padding: 6px;
+  }
 }
