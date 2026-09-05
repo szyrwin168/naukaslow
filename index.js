@@ -2,12 +2,12 @@
     const URL_bazy = 'https://raw.githubusercontent.com/szyrwin168/bazaslowa/main/'
     let spis = [];
     let bazy = [];
+    let wybrane = [];
     const formularz = document.getElementById('formularz');
     const trybWybor = document.getElementById('trybWybor');
     pobierzBaze();
     async function pobierzBaze() {
         try {
-            //pobieramy spis treści
             const odpowiedzSpis = await fetch(URL_bazy + 'index.json');
             spis = await odpowiedzSpis.json();
             for(let i = 0; spis.length>i; i++) {
@@ -30,7 +30,6 @@
         }
     }
 
-            // Pobieramy przycisk po jego ID
         const przyciskZatwierdz = document.getElementById('zatwierdz');
         przyciskZatwierdz.addEventListener('click', zatwierdz);
 
@@ -44,6 +43,7 @@
                 console.log(lista_slow)
             }
         }
+        lista_slow = Array.from(new Map(lista_slow.map(item => [item.pl, item])).values());
         if (lista_slow.length>0) {
             localStorage.setItem("lista_slow", JSON.stringify(lista_slow));
             formularz.style.display = "None";
@@ -59,17 +59,18 @@
         if (opcja === 1) {
             for(let i = 0; spis.length>i; i++) {
                 document.getElementById('check' + i).checked = true;
+                klik(i);
             }
         } else {
             for(let i = 0; spis.length>i; i++) {
                 document.getElementById('check' + i).checked = false;
+                klik(i);
             }
         }
     }
-    let wybrane = [];
     function klik(wybor) {
         const element = document.getElementById('kat' + wybor);
-        wybrane[wybor] = document.getElementById('check' + wybor).checked; //nie działa
+        wybrane[wybor] = document.getElementById('check' + wybor).checked;
         if (wybrane[wybor] === true) {
             element.style.backgroundColor = '#005CC8';
         } else {

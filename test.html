@@ -26,8 +26,13 @@
         <p id="wynik"></p>
         <a href="index.html"><button>Zmień słownictwo</button></a>
         <a href="fiszki.html"><button>Fiszki</button></a>
+        <a href="lista.html"><button>Lista słów</button></a>
     </section>
-    <section id="lista">
+    <section id="lista" style="display: none;">
+        <h2>Słowa wpisane błędnie:</h2><br>
+        <button onclick="tylkoBledy()">Tylko błędne słowa</button>
+        <ul id="wybraneSlowa">
+        </ul>
     </section>
     <footer>
         Autor: Szymon Szyrwiński

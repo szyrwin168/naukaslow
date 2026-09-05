@@ -15,7 +15,7 @@ window.addEventListener('load', ()=>{
 formularz.addEventListener('submit', (e)=>{
     e.preventDefault();
     const odpowiedz = document.getElementById('text');
-    if (odpowiedz.value === wylosowane_slowo.de) {
+    if (odpowiedz.value === wylosowane_slowo.de[0] || odpowiedz.value === wylosowane_slowo.de[1] || odpowiedz.value === wylosowane_slowo.de) {
         wynik.classList.add('dobrze');
         wynik.classList.remove('zle');
         wynik.innerHTML = "Dobrze!";
@@ -61,11 +61,22 @@ function koniec() {
     } else {
         slowoHTML.classList.add('zle');
     }
-    const lista = document.getElementById('lista');
-    lista.innerHTML = "<h2>Słowa wpisane błędnie:</h2><br>";
-    for (let i = 0; i < bledy.length; i++) {
-        const slowo = document.createElement("div");
-        slowo.innerHTML = bledy[i].pl + ' - ' + bledy[i].de;
-        lista.appendChild(slowo);
+    if (bledy.length>0) {
+        document.getElementById('lista').style.display = "block";
+        const lista = document.getElementById('wybraneSlowa');
+        for (let i = 0; i < bledy.length; i++) {
+            const slowo = document.createElement("li");
+            slowo.innerHTML = bledy[i].pl + ' - ' + bledy[i].de;
+            lista.appendChild(slowo);
+        }
+    }
+    console.log(bledy)
+}
+
+function tylkoBledy() {
+    if (bledy.length>0) {
+        localStorage.removeItem("lista_slow");
+        localStorage.setItem("lista_slow", JSON.stringify(bledy));
+        location.reload()
     }
 }

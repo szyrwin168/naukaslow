@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Wybrane słownictwo</h1>
+    <section>
+        <p id="slowo">Ilość wybranych słów: </p>
+        <a href="index.html"><button>Zmień słownictwo</button></a>
+        <a href="fiszki.html"><button>Fiszki</button></a>
+        <a href="test.html"><button>Test</button></a>
+    </section>
+    <section id="lista">
+        <ul id="wybraneSlowa">
+        </ul>
+    </section>
+    <footer>
+        Autor: Szymon Szyrwiński
+    </footer>
+
+<script>
+    let lista_slow = JSON.parse(localStorage.getItem("lista_slow")) || [];
+    const lista = document.getElementById('wybraneSlowa');
+    for (let i = 0; i < lista_slow.length; i++) {
+        const slowo = document.createElement("li");
+        slowo.innerHTML = lista_slow[i].pl + ' - ' + lista_slow[i].de;
+        lista.appendChild(slowo);
+    }
+    document.getElementById('slowo').innerHTML += lista_slow.length;
+</script>
+</body>
+</html>
