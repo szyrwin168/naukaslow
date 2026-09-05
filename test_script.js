@@ -15,7 +15,7 @@ window.addEventListener('load', ()=>{
 formularz.addEventListener('submit', (e)=>{
     e.preventDefault();
     const odpowiedz = document.getElementById('text');
-    if (odpowiedz.value === wylosowane_slowo.de[0] || odpowiedz.value === wylosowane_slowo.de[1] || odpowiedz.value === wylosowane_slowo.de) {
+    if (wylosowane_slowo.length === 2 && (odpowiedz.value === wylosowane_slowo.de[0] || odpowiedz.value === wylosowane_slowo.de[1]) || odpowiedz.value === wylosowane_slowo.de) {
         wynik.classList.add('dobrze');
         wynik.classList.remove('zle');
         wynik.innerHTML = "Dobrze!";
@@ -62,7 +62,7 @@ function koniec() {
         slowoHTML.classList.add('zle');
     }
     if (bledy.length>0) {
-        document.getElementById('lista').style.display = "block";
+        document.getElementById('lista').style.display = "flex";
         const lista = document.getElementById('wybraneSlowa');
         for (let i = 0; i < bledy.length; i++) {
             const slowo = document.createElement("li");
