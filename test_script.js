@@ -15,7 +15,7 @@ window.addEventListener('load', ()=>{
 formularz.addEventListener('submit', (e)=>{
     e.preventDefault();
     const odpowiedz = document.getElementById('text');
-    if (wylosowane_slowo.length === 2 && (odpowiedz.value === wylosowane_slowo.de[0] || odpowiedz.value === wylosowane_slowo.de[1]) || odpowiedz.value === wylosowane_slowo.de) {
+    if (Array.isArray(wylosowane_slowo.de) ? wylosowane_slowo.de.includes(odpowiedz.value) : odpowiedz.value === wylosowane_slowo.de) {
         wynik.classList.add('dobrze');
         wynik.classList.remove('zle');
         wynik.innerHTML = "Dobrze!";
