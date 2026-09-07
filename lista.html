@@ -12,11 +12,16 @@
         <p id="slowo">Ilość wybranych słów: </p>
         <a href="index.html"><button>Zmień słownictwo</button></a>
         <a href="fiszki.html"><button>Fiszki</button></a>
-        <a href="test.html"><button>Test</button></a>
+        <a href="test.html"><button>Test</button></a><br>
+        <p>Usuń wybrane słowa:</p>
+        <label>Od: <input type="text" id="od"></label>
+        <label>Do: <input type="text" id="do"></label>
+        <button onclick="usun()">Usuń</button>
+        <p id="komunikat"></p>
     </section>
     <section id="lista">
-        <ul id="wybraneSlowa">
-        </ul>
+        <ol id="wybraneSlowa">
+        </ol>
     </section>
     <footer>
         Autor: Szymon Szyrwiński
@@ -31,6 +36,21 @@
         lista.appendChild(slowo);
     }
     document.getElementById('slowo').innerHTML += lista_slow.length;
+
+    function usun() {
+        const od = parseInt(document.getElementById('od').value);
+        const do_ = parseInt(document.getElementById('do').value);
+        const ileUsunietych = (do_-od)+1;
+        if (od<=do_&&od>0&&do_<=lista_slow.length&&ileUsunietych<lista_slow.length) {
+            lista_slow.splice(od-1, ileUsunietych);
+            localStorage.removeItem("lista_slow");
+            localStorage.setItem("lista_slow", JSON.stringify(lista_slow));
+            location.reload()
+        } else {
+            document.getElementById('komunikat').innerHTML = "Wprowadź poprawne dane!";
+            document.getElementById('komunikat').style.color = "red";
+        }
+    }
 </script>
 </body>
 </html>
