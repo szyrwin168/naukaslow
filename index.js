@@ -50,7 +50,7 @@
             trybWybor.style.display = "Block";
             document.getElementById('h1').innerHTML = "Wybierz jedną z opcji:";
         } else {
-            document.getElementById('h1').style.color = "red";
+            document.getElementById('h1').style.color = "#820F14";
             document.getElementById('h1').textContent += "!";
         }
     }

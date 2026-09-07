@@ -52,10 +52,10 @@ button, input {
 
 /* statusy */
 .dobrze {
-    color: green;
+    color: rgb(0, 92, 0);
 }
 .zle {
-    color: red;
+    color: #820F14;
 }
 h2 {
     width: 100%;
@@ -126,6 +126,8 @@ h2 {
 #wybraneSlowa {
     text-align: left;
 }
+
+
 #od, #do {
-    width: 20px;
+    width: 60px;
 }
