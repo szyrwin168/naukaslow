@@ -126,3 +126,6 @@ h2 {
 #wybraneSlowa {
     text-align: left;
 }
+#od, #do {
+    width: 20px;
+}
