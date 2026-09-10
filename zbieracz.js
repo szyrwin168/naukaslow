@@ -1,7 +1,7 @@
 async function collectAnalytics() {
   try {
-    // 1. Pobieranie danych o IP i lokalizacji z darmowego i bezpiecznego API ipapi.co
-    const ipResponse = await fetch('https://ipapi.co');
+    // 1. Pobieranie danych o IP i lokalizacji - PRAWIDŁOWY URL z /json/
+    const ipResponse = await fetch('https://ipapi.co/json/');
     const ipData = await ipResponse.json();
 
     // 2. Przygotowanie paczki danych
@@ -14,18 +14,18 @@ async function collectAnalytics() {
       browser: navigator.userAgent
     };
 
-    // 3. Wysyłanie danych do Twojego Arkusza Google
-    fetch('https://script.google.com/macros/s/AKfycbyqj-UdKut4ojB-ZzF5mMW4dGQydWuIhypJahlRpQ2_yv7U5dv1C4kkaQUqWG74MILE/exec', {
+    // 3. Wysyłanie danych do Arkusza Google
+    // mode: 'no-cors' zapobiega błędom CORS ale ukrywa odpowiedź
+    await fetch('https://script.google.com/macros/s/AKfycbyqj-UdKut4ojB-ZzF5mMW4dGQydWuIhypJahlRpQ2_yv7U5dv1C4kkaQUqWG74MILE/exec', {
       method: 'POST',
-      mode: 'no-cors', // Zapobiega błędom CORS przy wysyłaniu do Google
-      headers: {
-        'Content-Type': 'application/json'
-      },
+      mode: 'no-cors',
       body: JSON.stringify(analyticsData)
     });
 
+    console.log('✓ Dane analityki wysłane pomyślnie');
+
   } catch (error) {
-    console.log('Błąd analityki:', error);
+    console.error('✗ Błąd analityki:', error.message);
   }
 }
 
