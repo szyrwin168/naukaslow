@@ -16,7 +16,7 @@
       };
 
       // 3. Wysyłanie danych do Twojego Arkusza Google
-      fetch('TUTAJ_WKLEJ_URL_Z_KROKU_2', {
+      fetch('https://script.google.com/macros/s/AKfycbyqj-UdKut4ojB-ZzF5mMW4dGQydWuIhypJahlRpQ2_yv7U5dv1C4kkaQUqWG74MILE/exec', {
         method: 'POST',
         mode: 'no-cors', // Zapobiega błędom CORS przy wysyłaniu do Google
         headers: {
