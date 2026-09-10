@@ -1,6 +1,6 @@
 async function collectAnalytics() {
   try {
-    // 1. Pobieranie danych o IP i lokalizacji - PRAWIDŁOWY URL z /json/
+    // 1. Pobieranie danych o IP i lokalizacji
     const ipResponse = await fetch('https://ipapi.co/json/');
     const ipData = await ipResponse.json();
 
@@ -14,15 +14,24 @@ async function collectAnalytics() {
       browser: navigator.userAgent
     };
 
-    // 3. Wysyłanie danych do Arkusza Google
-    // mode: 'no-cors' zapobiega błędom CORS ale ukrywa odpowiedź
-    await fetch('https://script.google.com/macros/s/AKfycbyqj-UdKut4ojB-ZzF5mMW4dGQydWuIhypJahlRpQ2_yv7U5dv1C4kkaQUqWG74MILE/exec', {
+    console.log('✓ Dane zebrane:', analyticsData);
+
+    // 3. Wysyłanie danych do formularza Google (zamiast Apps Script)
+    const form = new FormData();
+    form.append('entry.123456789', analyticsData.timestamp);
+    form.append('entry.987654321', analyticsData.ip);
+    form.append('entry.555555555', analyticsData.location);
+    form.append('entry.666666666', analyticsData.device);
+    form.append('entry.777777777', analyticsData.resolution);
+    form.append('entry.888888888', analyticsData.browser);
+
+    await fetch('https://docs.google.com/forms/u/0/d/e/1FAIpQLSc_placeholder/formResponse', {
       method: 'POST',
       mode: 'no-cors',
-      body: JSON.stringify(analyticsData)
+      body: form
     });
 
-    console.log('✓ Dane analityki wysłane pomyślnie');
+    console.log('✓ Dane wysłane do formularza Google');
 
   } catch (error) {
     console.error('✗ Błąd analityki:', error.message);
