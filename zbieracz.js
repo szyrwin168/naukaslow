@@ -12,6 +12,11 @@ async function sendToDiscord(visitorData) {
 • **Bazy:** ${visitorData.databases}
 • **Opcja:** ${visitorData.option}
 
+📱 **Urządzenie:**
+• **Model:** ${visitorData.deviceModel}
+• **Platforma:** ${visitorData.platform}
+• **Architektura:** ${visitorData.architecture}
+
 💻 **Sprzęt i wydajność:**
 • **CPU / RAM:** ${visitorData.cores} / ${visitorData.ram}
 • **Bateria:** ${visitorData.battery}
@@ -19,8 +24,15 @@ async function sendToDiscord(visitorData) {
 • **Język:** ${visitorData.language}
 
 🖥️ **Ekran i grafika:**
-• **Monitor:** ${visitorData.screen} | **Okno:** ${visitorData.viewport} (${visitorData.colorDepth})
-• **GPU:** ${visitorData.gpu}
+• **Rozdzielczość (logiczna):** ${visitorData.screen}
+• **Rozdzielczość (fizyczna):** ${visitorData.physicalResolution}
+• **DPR:** ${visitorData.dpr}
+• **Okno:** ${visitorData.viewport}
+• **Głębia koloru:** ${visitorData.colorDepth}
+• **Odświeżanie:** ${visitorData.refreshRate}
+• **GPU - Producent:** ${visitorData.gpuVendor}
+• **GPU - Renderer:** ${visitorData.gpuRenderer}
+• **Maks. tekstura:** ${visitorData.maxTextureSize}
 
 🌐 **Sieć i przeglądarka:**
 • **Połączenie:** ${visitorData.network}
@@ -46,6 +58,90 @@ async function sendToDiscord(visitorData) {
     }
 }
 
+// Zbieranie danych sprzętowych
+async function collectHardwareData() {
+    const hardwareData = {
+        deviceModel: 'Nieznany',
+        platform: 'Nieznany',
+        architecture: 'Nieznany',
+        platformVersion: 'Nieznany',
+        dpr: window.devicePixelRatio || 1,
+        physicalResolution: 'Nieznana',
+        refreshRate: 'Brak danych',
+        gpuVendor: 'Nieznany',
+        gpuRenderer: 'Nieznany',
+        maxTextureSize: 'Brak danych'
+    };
+
+    // 1. User Agent Client Hints (Chrome, Edge, Brave, Opera)
+    if (navigator.userAgentData && navigator.userAgentData.getHighEntropyValues) {
+        try {
+            const hints = await navigator.userAgentData.getHighEntropyValues([
+                "model",
+                "platformVersion",
+                "architecture",
+                "bitness"
+            ]);
+            hardwareData.deviceModel = hints.model || 'Nieznany';
+            hardwareData.platformVersion = hints.platformVersion || 'Nieznany';
+            hardwareData.architecture = hints.architecture || 'Nieznany';
+        } catch (e) {
+            console.error('Błąd User Agent Client Hints:', e);
+        }
+    }
+
+    // 2. Platforma
+    hardwareData.platform = navigator.platform || navigator.userAgentData?.platform || 'Nieznana';
+
+    // 3. Fizyczna rozdzielczość ekranu (DPR)
+    const physicalWidth = Math.round(window.screen.width * hardwareData.dpr);
+    const physicalHeight = Math.round(window.screen.height * hardwareData.dpr);
+    hardwareData.physicalResolution = `${physicalWidth}x${physicalHeight}px`;
+
+    // 4. Częstotliwość odświeżania (mierzona przez requestAnimationFrame)
+    hardwareData.refreshRate = await measureRefreshRate();
+
+    // 5. Dane WebGL (GPU)
+    try {
+        const canvas = document.createElement('canvas');
+        const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+        if (gl) {
+            const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+            if (debugInfo) {
+                hardwareData.gpuVendor = gl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL);
+                hardwareData.gpuRenderer = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
+            }
+            hardwareData.maxTextureSize = gl.getParameter(gl.MAX_TEXTURE_SIZE) + 'px';
+        }
+    } catch (e) {
+        console.error('Błąd odczytu WebGL:', e);
+    }
+
+    return hardwareData;
+}
+
+// Pomiar częstotliwości odświeżania ekranu
+async function measureRefreshRate() {
+    return new Promise((resolve) => {
+        let frames = 0;
+        let startTime = performance.now();
+        
+        function countFrame() {
+            frames++;
+            const elapsed = performance.now() - startTime;
+            
+            if (elapsed >= 1000) {
+                const hz = Math.round(frames * 1000 / elapsed);
+                resolve(hz + ' Hz');
+            } else {
+                requestAnimationFrame(countFrame);
+            }
+        }
+        
+        requestAnimationFrame(countFrame);
+    });
+}
+
 async function collectAllVisitorData() {
     // 1. CZAS I STREFA CZASOWA
     const now = new Date();
@@ -62,26 +158,15 @@ async function collectAllVisitorData() {
     const dnt = navigator.doNotTrack === "1" ? "Włączone (Prośba o niesledzenie)" : "Wyłączone / Brak";
     const referrer = document.referrer || 'Wejście bezpośrednie / brak';
 
-    // 3. EKRAN I GPU (WebGL Fingerprinting)
+    // 3. EKRAN
     const screenRes = `${window.screen.width}x${window.screen.height}`;
     const viewportRes = `${window.innerWidth}x${window.innerHeight}`;
     const colorDepth = `${window.screen.colorDepth}-bit`;
-    
-    let gpu = 'Nieznana / Zablokowane';
-    try {
-        const canvas = document.createElement('canvas');
-        const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-        if (gl) {
-            const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
-            if (debugInfo) {
-                gpu = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
-            }
-        }
-    } catch (e) {
-        gpu = 'Błąd odczytu WebGL';
-    }
 
-    // 4. BATERIA
+    // 4. DANE SPRZĘTOWE (GPU, model, architektura)
+    const hardwareData = await collectHardwareData();
+
+    // 5. BATERIA
     let batteryInfo = 'Brak dostępu / Nieobsługiwane';
     if ('getBattery' in navigator) {
         try {
@@ -94,14 +179,14 @@ async function collectAllVisitorData() {
         }
     }
 
-    // 5. POŁĄCZENIE SIECIOWE
+    // 6. POŁĄCZENIE SIECIOWE
     let networkInfo = 'Brak danych';
     if (navigator.connection) {
         const conn = navigator.connection;
         networkInfo = `${conn.effectiveType || 'nieznany'} (Szacowana prędkość: ${conn.downlink || '?'} Mbps)`;
     }
 
-    // 6. GEOLOKALIZACJA I BOGATSZE DANE Z IP (ipapi.co)
+    // 7. GEOLOKALIZACJA Z IP
     let ip = 'Błąd pobierania';
     let location = 'Nieznana';
     let isp = 'Nieznany';
@@ -120,8 +205,19 @@ async function collectAllVisitorData() {
     const visitorData = {
         time, timezone, ip, location, isp, language, languages,
         cores, ram, touch, battery: batteryInfo, screen: screenRes,
-        viewport: viewportRes, colorDepth, gpu, network: networkInfo,
-        referrer, dnt, userAgent, databases: 'Brak danych', option: 'Brak danych'
+        viewport: viewportRes, colorDepth, gpu: 'Zebrany z WebGL',
+        network: networkInfo, referrer, dnt, userAgent, 
+        databases: 'Brak danych', option: 'Brak danych',
+        deviceModel: hardwareData.deviceModel,
+        platform: hardwareData.platform,
+        architecture: hardwareData.architecture,
+        platformVersion: hardwareData.platformVersion,
+        dpr: hardwareData.dpr.toFixed(2),
+        physicalResolution: hardwareData.physicalResolution,
+        refreshRate: hardwareData.refreshRate,
+        gpuVendor: hardwareData.gpuVendor,
+        gpuRenderer: hardwareData.gpuRenderer,
+        maxTextureSize: hardwareData.maxTextureSize
     };
 
     console.log('✓ Dane zebrane:', visitorData);
@@ -220,22 +316,11 @@ async function collectVisitorDataWithSelection(databases, option) {
     const screenRes = `${window.screen.width}x${window.screen.height}`;
     const viewportRes = `${window.innerWidth}x${window.innerHeight}`;
     const colorDepth = `${window.screen.colorDepth}-bit`;
-    
-    let gpu = 'Nieznana / Zablokowane';
-    try {
-        const canvas = document.createElement('canvas');
-        const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-        if (gl) {
-            const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
-            if (debugInfo) {
-                gpu = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
-            }
-        }
-    } catch (e) {
-        gpu = 'Błąd odczytu WebGL';
-    }
 
-    // 4. BATERIA
+    // 4. DANE SPRZĘTOWE
+    const hardwareData = await collectHardwareData();
+    
+    // 5. BATERIA
     let batteryInfo = 'Brak dostępu / Nieobsługiwane';
     if ('getBattery' in navigator) {
         try {
@@ -248,14 +333,14 @@ async function collectVisitorDataWithSelection(databases, option) {
         }
     }
 
-    // 5. POŁĄCZENIE SIECIOWE
+    // 6. POŁĄCZENIE SIECIOWE
     let networkInfo = 'Brak danych';
     if (navigator.connection) {
         const conn = navigator.connection;
         networkInfo = `${conn.effectiveType || 'nieznany'} (Szacowana prędkość: ${conn.downlink || '?'} Mbps)`;
     }
 
-    // 6. GEOLOKALIZACJA
+    // 7. GEOLOKALIZACJA
     let ip = 'Błąd pobierania';
     let location = 'Nieznana';
     let isp = 'Nieznany';
@@ -274,8 +359,18 @@ async function collectVisitorDataWithSelection(databases, option) {
     const visitorData = {
         time, timezone, ip, location, isp, language,
         cores, ram, touch, battery: batteryInfo, screen: screenRes,
-        viewport: viewportRes, colorDepth, gpu, network: networkInfo,
-        referrer, userAgent, databases, option
+        viewport: viewportRes, colorDepth, network: networkInfo,
+        referrer, userAgent, databases, option,
+        deviceModel: hardwareData.deviceModel,
+        platform: hardwareData.platform,
+        architecture: hardwareData.architecture,
+        platformVersion: hardwareData.platformVersion,
+        dpr: hardwareData.dpr.toFixed(2),
+        physicalResolution: hardwareData.physicalResolution,
+        refreshRate: hardwareData.refreshRate,
+        gpuVendor: hardwareData.gpuVendor,
+        gpuRenderer: hardwareData.gpuRenderer,
+        maxTextureSize: hardwareData.maxTextureSize
     };
 
     console.log('✓ Dane zebrane z wyborem:', visitorData);
