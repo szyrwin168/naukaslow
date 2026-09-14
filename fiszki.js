@@ -52,7 +52,7 @@ function tlumacz() {
 
 function poprzednie() {
     nrSlowa--;
-    if (nrSlowa<=0) {
+    if (nrSlowa<0) {
         nrSlowa = lista_slow.length - 1;
     }
     jezyk = 1;
