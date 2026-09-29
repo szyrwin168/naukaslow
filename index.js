@@ -5,14 +5,15 @@
     let wybrane = [];
     const formularz = document.getElementById('formularz');
     const trybWybor = document.getElementById('trybWybor');
-    pobierzBaze();
-    async function pobierzBaze() {
+    wczytaj();
+    async function wczytaj() {
         try {
             const odpowiedzSpis = await fetch(URL_bazy + 'index.json');
             spis = await odpowiedzSpis.json();
+            console.log(spis.length)
             for(let i = 0; spis.length>i; i++) {
-                const odpowiedzBazy = await fetch(URL_bazy + spis[i].file);
-                bazy.push(await odpowiedzBazy.json());
+                // const = await fetch(URL_bazy + spis[i].file);
+                // bazy.push(await odpowiedzBazy.json());
                 const kategoria = document.createElement('label');
                 const checkbox = document.createElement('input');
                 checkbox.setAttribute('type', 'checkbox');
@@ -33,13 +34,22 @@
         const przyciskZatwierdz = document.getElementById('zatwierdz');
         przyciskZatwierdz.addEventListener('click', zatwierdz);
 
-    function zatwierdz(e) {
+    async function zatwierdz(e) {
         e.preventDefault(); 
         localStorage.removeItem("lista_slow");
+        document.getElementById('h1').innerHTML = "Ładowanie...";
+
         let lista_slow = [];
         for(let i = 0; spis.length>i; i++) {
             if (document.getElementById('check' + i).checked === true) {
+                try {
+                    const odpowiedzBazy = await fetch(URL_bazy + spis[i].file);
+                    bazy[i] = await odpowiedzBazy.json(); 
                 lista_slow = [...lista_slow, ...bazy[i]];
+                } catch (błąd) {
+                    console.error("Szczegóły błędu:", błąd); 
+                    alert('Nie udało się pobrać danych');
+                }
                 console.log(lista_slow)
             }
         }
@@ -50,6 +60,7 @@
             trybWybor.style.display = "Block";
             document.getElementById('h1').innerHTML = "Wybierz jedną z opcji:";
         } else {
+            document.getElementById('h1').innerHTML = "Wybierz zakres słownictwa";
             document.getElementById('h1').style.color = "#820F14";
             document.getElementById('h1').textContent += "!";
         }

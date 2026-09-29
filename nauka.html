@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Test</title>
+    <title>Nauka</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Podaj tłumaczenie słowa</h1>
+    <h1 id="h1">Podaj tłumaczenie słowa</h1>
     <section>
         <p id="slowo"></p>
         <form id="formularz">
-            <input name="slowo" type="text" id="text" required>
+            <input name="slowo" type="text" id="text" required autocomplete="off">
             <input type="submit" value="Zatwierdź" id="submit"> <br><br>
         </form>
         <button onclick="umlaut('ä')">ä</button>
@@ -27,7 +27,7 @@
         <a href="index.html"><button>Zmień słownictwo</button></a>
         <a href="fiszki.html"><button>Fiszki</button></a>
         <a href="lista.html"><button>Lista słów</button></a>
-        <a href="nauka.html"><button>Nauka</button></a>
+        <a href="test.html"><button>Test</button></a>
     </section>
     <section id="lista" style="display: none;">
         <h2>Słowa wpisane błędnie:</h2><br>
@@ -39,6 +39,6 @@
         Autor: Szymon Szyrwiński
     </footer>
 
-<script src="test_script.js"></script>
+<script src="nauka.js"></script>
 </body>
 </html>
